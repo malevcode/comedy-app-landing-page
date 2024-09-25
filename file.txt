@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComedyGenius - The Ultimate App for Comedians</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&callback=initMap" async defer></script>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <h1>ComedyGenius: Elevate Your Comedy Career</h1>
+    
+    <div class="feature" id="openMicFinder">
+        <h2>🎤 Open Mic Finder</h2>
+        <p>Discover open mics and shows in your area with ease. Never miss an opportunity to perform and hone your craft.</p>
+    </div>
+    
+    <div class="feature">
+        <h2>🎙️ Smart Transcription</h2>
+        <p>Automatically transcribe your performances with joke identifiers. Analyze your material and track your progress over time.</p>
+    </div>
+    
+    <div class="feature">
+        <h2>🕵️ Parallel Thinking Analysis</h2>
+        <p>Discover which famous comedians your style is most similar to, identify any directly overlapping bits, and develop your own distinguished voice. Our extensive database of published comedy specials helps you ensure your material stands out from the crowd.</p>
+    </div>
+    
+    <div class="feature">
+        <h2>📅 Comedy Calendar</h2>
+        <p>Plan your mics, shows, and social media posts all in one place. Stay organized and never double-book yourself again.</p>
+    </div>
+    
+    <div class="feature">
+        <h2>🎬 Content Creator</h2>
+        <p>Edit and create reels and TikTok content directly in the app. Share your best bits with the world effortlessly.</p>
+    </div>
+    
+    <div class="feature">
+        <h2>📈 Comedy Progress Tracker</h2>
+        <p>Track your comedy career progress with our unique system. Every time you get on stage, you gain 0.01 progress. Watch as you advance through different levels, from Newbie to Comedy Hall of Famer!</p>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+        </div>
+        <p id="statusText">Current Status: Newbie (0.05%)</p>
+    </div>
+    
+    <div class="cta">
+        <h2>Ready to Take Your Comedy to the Next Level?</h2>
+        <p>Be among the first to know when ComedyGenius launches. Sign up now!</p>
+        <form>
+            <input type="email" placeholder="Your Email" required>
+            <input type="text" placeholder="Instagram Handle" required>
+            <input type="text" placeholder="Years in Comedy">
+            <button type="submit">Join the Waitlist</button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { createOpenMicDiv } from './openMicFinder.js';
+        function updateProgress(performances) {
+            const progress = performances * 0.01;
+            const progressBar = document.getElementById('progressBar');
+            const statusText = document.getElementById('statusText');
+            
+            progressBar.style.width = `${Math.min(progress, 100)}%`;
+            
+            let status;
+            if (progress < 50) status = "Newbie";
+            else if (progress < 100) status = "Amateur";
+            else if (progress < 500) status = "Rising Star";
+            else if (progress < 1000) status = "Local Favorite";
+            else if (progress < 5000) status = "Professional";
+            else if (progress < 10000) status = "Headliner";
+            else if (progress < 50000) status = "Comedy Master";
+            else if (progress < 65000) status = "Rare Comedian";
+            else if (progress < 75000) status = "Comedy Great";
+            else if (progress < 85000) status = "Comedy Killer";
+            else if (progress < 95000) status = "Comedy Legend";
+            else status = "Comedy Hall of Famer";
+            
+            statusText.textContent = `Current Status: ${status} (${progress.toFixed(2)}%)`;
+        }
+        
+        // Simulate progress over time
+        let performances = 5;
+        setInterval(() => {
+            performances += 1;
+            updateProgress(performances);
+        }, 2000);
+
+
+        // Function to set up the event listener for Open Mic Finder
+        function setupOpenMicFinder() {
+            const openMicFinderDiv = document.getElementById('openMicFinder');
+            if (openMicFinderDiv) {
+                openMicFinderDiv.onclick = function () {
+                    // Hide all existing elements in the body
+                    document.querySelectorAll('body > *').forEach(element => {
+                        element.classList.add('hidden');
+                    });
+
+                    // Use the imported function to create the Open Mic Finder div
+                    const newDiv = createOpenMicDiv();
+
+                    // Append the new div to the body
+                    document.body.appendChild(newDiv);
+                };
+            }
+        }
+
+        setupOpenMicFinder();
+
+
+    </script>
+</body>
+</html>// server.js
+const fs = require('fs');
+const path = require('path');
+const dotenv = require('dotenv');
+const http = require('http');
+const port = 8080;
+
+// Load environment variables from .env file
+dotenv.config();
+
+// Replace the placeholder in the HTML file with the API key from .env
+function serveHTML(request, response) {
+    fs.readFile(path.join(__dirname, 'index.html'), 'utf8', (err, data) => {
+        if (err) {
+            response.writeHead(500, { 'Content-Type': 'text/plain' });
+            response.end('Error loading HTML file.');
+            return;
+        }
+
+        // Replace placeholder with actual API key from .env
+        const modifiedData = data.replace('{{GOOGLE_MAPS_API_KEY}}', process.env.GOOGLE_MAPS_API_KEY);
+
+        response.writeHead(200, { 'Content-Type': 'text/html' });
+        response.end(modifiedData);
+    });
+}
+
+// Create the HTTP server
+http.createServer(serveHTML).listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+// openMicFinder.js
+export function createOpenMicDiv() {
+    const newDiv = document.createElement('div');
+    newDiv.classList.add('feature');
+
+    // Create elements
+    const heading = document.createElement('h2');
+    heading.textContent = 'Open Mic Finder - Explore Opportunities';
+
+    const paragraph = document.createElement('p');
+    paragraph.textContent = 'Use the tool below to find and sign up for open mics in your area.';
+
+    const form = document.createElement('form');
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Enter Your City';
+    input.required = true;
+
+    const searchButton = document.createElement('button');
+    searchButton.type = 'submit';
+    searchButton.textContent = 'Search';
+
+    // Append input and button to form
+    form.appendChild(input);
+    form.appendChild(searchButton);
+
+    const goBackButton = document.createElement('button');
+    goBackButton.textContent = 'Go Back';
+    goBackButton.onclick = () => location.reload();
+
+    // Append all elements to the new div
+    newDiv.appendChild(heading);
+    newDiv.appendChild(paragraph);
+    newDiv.appendChild(form);
+    newDiv.appendChild(goBackButton);
+
+    return newDiv;
+}
