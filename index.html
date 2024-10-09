@@ -1,127 +1,128 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ComedyGenius - The Ultimate App for Comedians</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&callback=initMap" defer></script>
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>ComedyGenius: Elevate Your Comedy Career</h1>
     
+    <!-- Open Mic Finder Section -->
     <div class="feature" id="openMicFinder">
         <h2>🎤 Open Mic Finder</h2>
         <p>Discover open mics and shows in your area with ease. Never miss an opportunity to perform and hone your craft.</p>
+        <div id="openMicResults">
+            <input type="text" id="searchInput" placeholder="Search open mics by location or time">
+            <ul id="micList"></ul>
+        </div>
     </div>
-    
+
+    <!-- Other App Features Coming in 2025 -->
     <div class="feature">
         <h2>🎙️ Smart Transcription</h2>
         <p>Automatically transcribe your performances with joke identifiers. Analyze your material and track your progress over time.</p>
     </div>
-    
+
     <div class="feature">
         <h2>🕵️ Parallel Thinking Analysis</h2>
-        <p>Discover which famous comedians your style is most similar to, identify any directly overlapping bits, and develop your own distinguished voice. Our extensive database of published comedy specials helps you ensure your material stands out from the crowd.</p>
+        <p>Discover which famous comedians your style is most similar to, identify overlapping bits, and develop your own unique voice.</p>
     </div>
-    
+
     <div class="feature">
         <h2>📅 Comedy Calendar</h2>
         <p>Plan your mics, shows, and social media posts all in one place. Stay organized and never double-book yourself again.</p>
     </div>
-    
+
     <div class="feature">
         <h2>🎬 Content Creator</h2>
-        <p>Edit and create reels and TikTok content directly in the app. Share your best bits with the world effortlessly.</p>
+        <p>Edit and create reels and TikTok content directly in the app. Share your best bits effortlessly.</p>
     </div>
-    
+
     <div class="feature">
         <h2>📈 Comedy Progress Tracker</h2>
-        <p>Track your comedy career progress with our unique system. Every time you get on stage, you gain 0.01 progress. Watch as you advance through different levels, from Newbie to Comedy Hall of Famer!</p>
-        <div class="progress-bar">
-            <div class="progress" id="progressBar"></div>
-        </div>
-        <p id="statusText">Current Status: Newbie (0.05%)</p>
+        <p>Track your comedy career progress with our unique system. Gain points every time you perform, and watch your status rise!</p>
     </div>
-    
+
+    <!-- Functional Form for Collecting Interest -->
     <div class="cta">
-        <h2>Ready to Take Your Comedy to the Next Level?</h2>
-        <p>Be among the first to know when ComedyGenius launches. Sign up now!</p>
-        <form id="signUpForm">
+        <h2>Sign Up for Early Access to ComedyGenius</h2>
+        <p>Join the waitlist and be among the first to use ComedyGenius when it launches in 2025!</p>
+        <form id="interestForm">
             <input type="email" id="email" placeholder="Your Email" required>
             <input type="text" id="instagram" placeholder="Instagram Handle" required>
-            <input type="number" id="yearsInComedy" placeholder="Years in Comedy">
+            <input type="number" id="yearsComedy" placeholder="Years in Comedy">
+            <input type="number" id="micsPerMonth" placeholder="Open Mics per Month">
+            <input type="number" id="moneySpent" placeholder="Money Spent on Mics (monthly)">
             <button type="submit">Join the Waitlist</button>
         </form>
-        <p id="formStatus"></p>
+        <p id="formResponse"></p>
     </div>
 
-    <script type="module">
-        import { createOpenMicDiv } from './openMicFinder.js';
-        
-        function updateProgress(performances) {
-            const progress = performances * 0.01;
-            const progressBar = document.getElementById('progressBar');
-            const statusText = document.getElementById('statusText');
-            
-            progressBar.style.width = `${Math.min(progress, 100)}%`;
-            
-            let status;
-            if (progress < 50) status = "Newbie";
-            else if (progress < 100) status = "Amateur";
-            else if (progress < 500) status = "Rising Star";
-            else if (progress < 1000) status = "Local Favorite";
-            else if (progress < 5000) status = "Professional";
-            else if (progress < 10000) status = "Headliner";
-            else if (progress < 50000) status = "Comedy Master";
-            else if (progress < 65000) status = "Rare Comedian";
-            else if (progress < 75000) status = "Comedy Great";
-            else if (progress < 85000) status = "Comedy Killer";
-            else if (progress < 95000) status = "Comedy Legend";
-            else status = "Comedy Hall of Famer";
-            
-            statusText.textContent = `Current Status: ${status} (${progress.toFixed(2)}%)`;
-        }
-        
-        let performances = 5;
-        setInterval(() => {
-            performances += 1;
-            updateProgress(performances);
-        }, 2000);
-
-        function setupOpenMicFinder() {
-            const openMicFinderDiv = document.getElementById('openMicFinder');
-            if (openMicFinderDiv) {
-                openMicFinderDiv.onclick = function () {
-                    document.querySelectorAll('body > *').forEach(element => {
-                        element.classList.add('hidden');
-                    });
-                    const newDiv = createOpenMicDiv();
-                    document.body.appendChild(newDiv);
-                };
-            }
+    <script>
+        // Fetch Open Mic Data from Google Sheets
+        async function fetchOpenMicData() {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbzQSs13Dzy95c79u9AeUirspzxHLYCzzhFy7WjFeHEWHAIHbUPI5qez0dbEo8RKSRL8/exec');
+            const data = await response.json();
+            displayOpenMics(data);
         }
 
-        document.addEventListener('DOMContentLoaded', (event) => {
-            setupOpenMicFinder();
+        function displayOpenMics(mics) {
+            const micList = document.getElementById('micList');
+            micList.innerHTML = ''; // Clear any existing data
+
+            mics.forEach(mic => {
+                const micItem = document.createElement('li');
+                micItem.textContent = `${mic.day} - ${mic.location} - ${mic.time} - $${mic.cost}`;
+                micList.appendChild(micItem);
+            });
+        }
+
+        // Search functionality for Open Mic Finder
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const micItems = document.querySelectorAll('#micList li');
+            
+            micItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchValue)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         });
 
-        // Handling the form submission
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQSs13Dzy95c79u9AeUirspzxHLYCzzhFy7WjFeHEWHAIHbUPI5qez0dbEo8RKSRL8/exec';
-        const form = document.getElementById('signUpForm');
-        const formStatus = document.getElementById('formStatus');
+        // Call the function to fetch data on page load
+        document.addEventListener('DOMContentLoaded', fetchOpenMicData);
 
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            const formData = new FormData(form);
-            fetch(scriptURL, { method: 'POST', body: formData })
-                .then(response => {
-                    formStatus.textContent = "Thank you for signing up!";
-                    form.reset();
-                })
-                .catch(error => {
-                    formStatus.textContent = "Error submitting the form. Please try again.";
-                });
+        // Submit Form Data to Google Sheets Script
+        document.getElementById('interestForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const instagram = document.getElementById('instagram').value;
+            const yearsComedy = document.getElementById('yearsComedy').value;
+            const micsPerMonth = document.getElementById('micsPerMonth').value;
+            const moneySpent = document.getElementById('moneySpent').value;
+
+            const response = await fetch('https://script.google.com/macros/s/AKfycbzQSs13Dzy95c79u9AeUirspzxHLYCzzhFy7WjFeHEWHAIHbUPI5qez0dbEo8RKSRL8/exec', {
+                method: 'POST',
+                body: JSON.stringify({
+                    email,
+                    instagram,
+                    yearsComedy,
+                    micsPerMonth,
+                    moneySpent
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            document.getElementById('formResponse').textContent = result.message || 'Thank you for signing up!';
         });
     </script>
 </body>
