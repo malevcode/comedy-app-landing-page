@@ -5,57 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ComedyGenius - The Ultimate App for Comedians</title>
     <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&callback=initMap" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/tabletop@1.5.2/src/tabletop.min.js"></script> <!-- Include Tabletop.js -->
     <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
     <h1>ComedyGenius: Elevate Your Comedy Career</h1>
-
-    <!-- Open Mic Finder Section -->
+    
     <div class="feature" id="openMicFinder">
         <h2>🎤 Open Mic Finder</h2>
         <p>Discover open mics and shows in your area with ease. Never miss an opportunity to perform and hone your craft.</p>
-
-        <!-- Search Filters -->
-        <div id="searchFilters">
-            <h3>Find Open Mics</h3>
-            <label for="time">Time:</label>
-            <input type="time" id="time">
-            
-            <label for="location">Location:</label>
-            <input type="text" id="location" placeholder="Enter a location">
-            
-            <label for="cost">Cost:</label>
-            <input type="number" id="cost" placeholder="Max cost ($)">
-            
-            <button id="searchButton">Search</button>
-        </div>
-
-        <!-- Results will be displayed here -->
-        <div id="openMicResults"></div>
     </div>
-
-    <!-- Other Features -->
+    
     <div class="feature">
         <h2>🎙️ Smart Transcription</h2>
         <p>Automatically transcribe your performances with joke identifiers. Analyze your material and track your progress over time.</p>
     </div>
-
+    
     <div class="feature">
         <h2>🕵️ Parallel Thinking Analysis</h2>
         <p>Discover which famous comedians your style is most similar to, identify any directly overlapping bits, and develop your own distinguished voice. Our extensive database of published comedy specials helps you ensure your material stands out from the crowd.</p>
     </div>
-
+    
     <div class="feature">
         <h2>📅 Comedy Calendar</h2>
         <p>Plan your mics, shows, and social media posts all in one place. Stay organized and never double-book yourself again.</p>
     </div>
-
+    
     <div class="feature">
         <h2>🎬 Content Creator</h2>
         <p>Edit and create reels and TikTok content directly in the app. Share your best bits with the world effortlessly.</p>
     </div>
-
+    
     <div class="feature">
         <h2>📈 Comedy Progress Tracker</h2>
         <p>Track your comedy career progress with our unique system. Every time you get on stage, you gain 0.01 progress. Watch as you advance through different levels, from Newbie to Comedy Hall of Famer!</p>
@@ -64,20 +43,22 @@
         </div>
         <p id="statusText">Current Status: Newbie (0.05%)</p>
     </div>
-
+    
     <div class="cta">
         <h2>Ready to Take Your Comedy to the Next Level?</h2>
         <p>Be among the first to know when ComedyGenius launches. Sign up now!</p>
-        <form>
-            <input type="email" placeholder="Your Email" required>
-            <input type="text" placeholder="Instagram Handle" required>
-            <input type="text" placeholder="Years in Comedy">
+        <form id="signUpForm">
+            <input type="email" id="email" placeholder="Your Email" required>
+            <input type="text" id="instagram" placeholder="Instagram Handle" required>
+            <input type="number" id="yearsInComedy" placeholder="Years in Comedy">
             <button type="submit">Join the Waitlist</button>
         </form>
+        <p id="formStatus"></p>
     </div>
 
     <script type="module">
-        // Function to update progress bar (as per your original code)
+        import { createOpenMicDiv } from './openMicFinder.js';
+        
         function updateProgress(performances) {
             const progress = performances * 0.01;
             const progressBar = document.getElementById('progressBar');
@@ -102,64 +83,45 @@
             statusText.textContent = `Current Status: ${status} (${progress.toFixed(2)}%)`;
         }
         
-        // Simulate progress over time (your original code)
         let performances = 5;
         setInterval(() => {
             performances += 1;
             updateProgress(performances);
         }, 2000);
 
-        // Fetch and display open mic data from Google Sheets
-        function fetchOpenMicData() {
-            const publicSpreadsheetUrl = 'YOUR_GOOGLE_SHEET_URL'; // Replace with actual Google Sheet URL
-            return new Promise((resolve, reject) => {
-                Tabletop.init({
-                    key: publicSpreadsheetUrl,
-                    callback: data => resolve(data),
-                    simpleSheet: false // Set to false because each day is a separate sheet
-                });
-            });
+        function setupOpenMicFinder() {
+            const openMicFinderDiv = document.getElementById('openMicFinder');
+            if (openMicFinderDiv) {
+                openMicFinderDiv.onclick = function () {
+                    document.querySelectorAll('body > *').forEach(element => {
+                        element.classList.add('hidden');
+                    });
+                    const newDiv = createOpenMicDiv();
+                    document.body.appendChild(newDiv);
+                };
+            }
         }
 
-        // Function to filter open mic data by time, location, and cost
-        function filterOpenMics(data, time, location, cost) {
-            return data.filter(mic => {
-                const matchesTime = time ? mic.Time >= time : true;
-                const matchesLocation = location ? mic.Location.toLowerCase().includes(location.toLowerCase()) : true;
-                const matchesCost = cost ? parseInt(mic.Cost) <= cost || mic.Cost.toLowerCase() === 'free' : true;
-
-                return matchesTime && matchesLocation && matchesCost;
-            });
-        }
-
-        // Function to show filtered results
-        function showFilteredMics(data, time, location, cost) {
-            const openMicResultsDiv = document.getElementById('openMicResults');
-            openMicResultsDiv.innerHTML = ''; // Clear any previous results
-            
-            const filteredMics = filterOpenMics(data, time, location, cost);
-            filteredMics.forEach(mic => {
-                const micDiv = document.createElement('div');
-                micDiv.innerHTML = `<p><strong>${mic.Time}</strong> - ${mic.Location} - ${mic.Cost}</p>`;
-                openMicResultsDiv.appendChild(micDiv);
-            });
-        }
-
-        // Set up search filters functionality
-        document.getElementById('searchButton').onclick = function () {
-            const time = document.getElementById('time').value;
-            const location = document.getElementById('location').value;
-            const cost = document.getElementById('cost').value;
-
-            fetchOpenMicData().then(data => {
-                const mondayMics = data['Monday'].elements; // Example for Monday sheet
-                showFilteredMics(mondayMics, time, location, cost);
-            });
-        };
-        
-        // Set up the Open Mic Finder
         document.addEventListener('DOMContentLoaded', (event) => {
             setupOpenMicFinder();
+        });
+
+        // Handling the form submission
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQSs13Dzy95c79u9AeUirspzxHLYCzzhFy7WjFeHEWHAIHbUPI5qez0dbEo8RKSRL8/exec';
+        const form = document.getElementById('signUpForm');
+        const formStatus = document.getElementById('formStatus');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(response => {
+                    formStatus.textContent = "Thank you for signing up!";
+                    form.reset();
+                })
+                .catch(error => {
+                    formStatus.textContent = "Error submitting the form. Please try again.";
+                });
         });
     </script>
 </body>
