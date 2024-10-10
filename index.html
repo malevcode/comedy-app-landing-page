@@ -6,11 +6,18 @@
   <title>Comedy App - NYC Open Mics</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
+      font-family: 'Arial', sans-serif;
+      background-color: #f9fafc;
       margin: 0;
       padding: 0;
       color: #333;
+    }
+
+    header {
+      background-color: #3498db;
+      color: white;
+      text-align: center;
+      padding: 20px;
     }
 
     h2 {
@@ -23,6 +30,33 @@
       padding: 20px;
       max-width: 1200px;
       margin: 0 auto;
+    }
+
+    /* Styling for emojis and feature sections */
+    .feature-section {
+      text-align: center;
+      margin: 40px 0;
+      background-color: #ecf0f1;
+      padding: 30px;
+      border-radius: 10px;
+    }
+
+    .feature-title {
+      font-size: 28px;
+      color: #2980b9;
+      margin-bottom: 10px;
+    }
+
+    .feature-description {
+      font-size: 18px;
+      color: #7f8c8d;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .emoji {
+      font-size: 36px;
+      margin-bottom: 10px;
     }
 
     /* Styling the filters */
@@ -61,57 +95,75 @@
       background-color: #f2f2f2;
     }
 
-    /* Feature sections */
-    .feature-section {
-      text-align: center;
-      margin: 40px 0;
-    }
-
-    .feature-title {
-      font-size: 24px;
-      color: #2980b9;
-      margin-bottom: 15px;
-    }
-
-    .feature-description {
-      font-size: 16px;
-      color: #7f8c8d;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
     footer {
       text-align: center;
       padding: 20px;
       background-color: #2c3e50;
       color: white;
     }
+
+    /* Sign-up form */
+    .signup-section {
+      background-color: #ecf0f1;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 10px;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .signup-section input, .signup-section button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    .signup-section button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .signup-section button:hover {
+      background-color: #2980b9;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Existing feature sections -->
+  <header>
+    <h1>Comedy App - NYC Open Mics & More</h1>
+  </header>
+
+  <!-- Existing feature sections with emojis -->
   <section class="feature-section">
+    <div class="emoji">📝</div>
     <h2 class="feature-title">Smart Transcriptions</h2>
     <p class="feature-description">Get your performances transcribed instantly and track your jokes' evolution over time with our Smart Transcription feature.</p>
   </section>
 
   <section class="feature-section">
+    <div class="emoji">🤔</div>
     <h2 class="feature-title">Parallel Thinking Analysis</h2>
     <p class="feature-description">Compare your comedy style with others and avoid overlapping material with our cutting-edge Parallel Thinking tool.</p>
   </section>
 
   <section class="feature-section">
+    <div class="emoji">📅</div>
     <h2 class="feature-title">Comedy Calendar</h2>
     <p class="feature-description">Stay organized with our Comedy Calendar to track open mics, shows, and social media posts.</p>
   </section>
 
   <section class="feature-section">
+    <div class="emoji">🎥</div>
     <h2 class="feature-title">Content Creator</h2>
     <p class="feature-description">Easily create, edit, and share your comedy reels and TikTok videos right from our app.</p>
   </section>
 
   <section class="feature-section">
+    <div class="emoji">📈</div>
     <h2 class="feature-title">Comedy Progress Tracker</h2>
     <p class="feature-description">Measure your growth by tracking your performance metrics and advance through different levels of stage experience.</p>
   </section>
@@ -141,6 +193,18 @@
         <!-- Rows will be populated by JavaScript -->
       </tbody>
     </table>
+  </section>
+
+  <!-- Sign-up section -->
+  <section class="signup-section">
+    <h2>Join Our Comedy Community</h2>
+    <p>Stay up-to-date on the latest features and open mic info. Sign up below:</p>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="instagram" placeholder="Instagram Handle" required>
+    <input type="number" id="years" placeholder="Years in Comedy" required>
+    <input type="number" id="mics-per-month" placeholder="Open Mics per Month" required>
+    <input type="number" id="mic-cost" placeholder="Amount Spent on Mics per Month ($)" required>
+    <button onclick="submitSignupForm()">Sign Up</button>
   </section>
 
   <footer>
@@ -204,47 +268,3 @@
     // Automatically filter based on current day of the week and time
     function autoFilterByDayAndTime(openMics) {
       const now = new Date();
-      const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
-      const currentTime = now.toTimeString().slice(0, 5); // Get current time in HH:MM format
-
-      return openMics.filter(mic => {
-        const micDate = new Date(mic.date);
-        const micDay = micDate.toLocaleDateString('en-US', { weekday: 'long' });
-        return micDay === currentDay && mic.time > currentTime;
-      });
-    }
-
-    // Search functionality based on user input
-    function searchOpenMics() {
-      const locationInput = document.getElementById('location-filter').value.toLowerCase();
-      const costInput = document.getElementById('cost-filter').value;
-
-      const table = document.getElementById('open-mic-table');
-      const rows = table.getElementsByTagName('tr');
-
-      for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
-        const locationCell = rows[i].getElementsByTagName('td')[2]; // Address column
-        const costCell = rows[i].getElementsByTagName('td')[4]; // Cost column
-
-        let matchesLocation = locationCell.textContent.toLowerCase().includes(locationInput);
-        let matchesCost = true;
-
-        if (costInput) {
-          const cost = parseFloat(costCell.textContent.replace('$', ''));
-          matchesCost = cost <= parseFloat(costInput);
-        }
-
-        if (matchesLocation && matchesCost) {
-          rows[i].style.display = "";
-        } else {
-          rows[i].style.display = "none";
-        }
-      }
-    }
-
-    // Fetch and display the data when the page loads
-    fetchOpenMicData();
-  </script>
-
-</body>
-</html>
