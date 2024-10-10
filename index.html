@@ -3,55 +3,141 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NYC Open Mics</title>
+  <title>NYC Comedy App</title>
   <style>
-    /* Add basic styling for the table */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 10px 0;
+      text-align: center;
+    }
+    h1, h2 {
+      font-weight: 300;
+    }
+    h1 {
+      margin: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    #open-mic-schedule {
+      margin-top: 40px;
+    }
+    input[type="text"], input[type="number"] {
+      padding: 10px;
+      width: 200px;
+      margin: 0 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 20px;
     }
     table, th, td {
-      border: 1px solid black;
+      border: 1px solid #ccc;
     }
     th, td {
-      padding: 8px;
+      padding: 12px;
       text-align: left;
     }
-    #filters {
+    th {
+      background-color: #f9f9f9;
+    }
+    .feature {
+      display: flex;
+      align-items: center;
       margin-bottom: 20px;
+    }
+    .feature img {
+      width: 100px;
+      height: 100px;
+      margin-right: 20px;
     }
   </style>
 </head>
 <body>
 
-  <section id="open-mic-schedule">
-    <h2>NYC Open Mics</h2>
-    
-    <!-- Filters section -->
-    <div id="filters">
-      <label for="location-filter">Location:</label>
-      <input type="text" id="location-filter" placeholder="Enter location" onkeyup="searchOpenMics()">
-      
-      <label for="cost-filter">Max Cost ($):</label>
-      <input type="number" id="cost-filter" placeholder="Enter max cost" onkeyup="searchOpenMics()">
-    </div>
+  <header>
+    <h1>Comedy App - Coming 2025!</h1>
+  </header>
 
-    <!-- Table for displaying open mics -->
-    <table id="open-mic-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Venue</th>
-          <th>Address</th>
-          <th>Time</th>
-          <th>Cost</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Rows will be populated by JavaScript -->
-      </tbody>
-    </table>
-  </section>
+  <div class="container">
+    <!-- Feature sections -->
+    <section id="features">
+      <h2>Features</h2>
+
+      <div class="feature">
+        <img src="transcription_icon.png" alt="Smart Transcription Icon">
+        <p><strong>Smart Transcription:</strong> Automatically transcribe performances and track joke progress over time.</p>
+      </div>
+
+      <div class="feature">
+        <img src="analysis_icon.png" alt="Parallel Thinking Icon">
+        <p><strong>Parallel Thinking Analysis:</strong> Detect similar comedic styles and avoid overlapping material with other comedians.</p>
+      </div>
+
+      <div class="feature">
+        <img src="calendar_icon.png" alt="Comedy Calendar Icon">
+        <p><strong>Comedy Calendar:</strong> Organize open mics, shows, and social media posts to streamline your comedy career.</p>
+      </div>
+
+      <div class="feature">
+        <img src="content_icon.png" alt="Content Creator Icon">
+        <p><strong>Content Creator:</strong> Easily edit and share your comedy reels and TikTok content directly from the app.</p>
+      </div>
+
+      <div class="feature">
+        <img src="progress_icon.png" alt="Comedy Progress Icon">
+        <p><strong>Comedy Progress Tracker:</strong> Track your performance over time and level up as you gain more stage experience.</p>
+      </div>
+    </section>
+
+    <!-- Open Mic Schedule section -->
+    <section id="open-mic-schedule">
+      <h2>NYC Open Mics</h2>
+
+      <!-- Filters section -->
+      <div id="filters">
+        <label for="location-filter">Location:</label>
+        <input type="text" id="location-filter" placeholder="Enter location" onkeyup="searchOpenMics()">
+        
+        <label for="cost-filter">Max Cost ($):</label>
+        <input type="number" id="cost-filter" placeholder="Enter max cost" onkeyup="searchOpenMics()">
+      </div>
+
+      <!-- Table for displaying open mics -->
+      <table id="open-mic-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Venue</th>
+            <th>Address</th>
+            <th>Time</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows will be populated by JavaScript -->
+        </tbody>
+      </table>
+    </section>
+  </div>
 
   <script>
     // Your Google Sheet ID and API Key
