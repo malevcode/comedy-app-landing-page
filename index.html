@@ -84,6 +84,52 @@
     .signup-section button:hover {
       background-color: #2980b9;
     }
+
+    /* Reddit-style wall of posts */
+    .post-wall {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+    }
+
+    .post {
+      background-color: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .post-content {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+
+    .vote-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .vote-buttons button {
+      background-color: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .vote-buttons button:hover {
+      color: #3498db;
+    }
+
+    .vote-count {
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
@@ -135,6 +181,14 @@
     <button onclick="submitSignupForm()">Sign Up</button>
   </section>
 
+  <!-- Reddit-style Wall of Posts -->
+  <section class="post-wall">
+    <h2>Comedy Thoughts & Jokes</h2>
+    <div id="posts"></div>
+    <input type="text" id="newPost" placeholder="Share your comedy thoughts" style="width: 100%; padding: 10px; margin-top: 10px;">
+    <button onclick="addPost()">Post</button>
+  </section>
+
   <footer>
     &copy; 2024 Comedy App - All Rights Reserved
   </footer>
@@ -159,6 +213,50 @@
       })
       .catch(error => {
         console.error('Error!', error.message);
+      });
+    }
+
+    // Reddit-style Wall of Posts (Simple client-side mockup)
+    let posts = [];
+    let voteCounts = [];
+
+    function addPost() {
+      const postContent = document.getElementById('newPost').value;
+      if (postContent.trim()) {
+        posts.push(postContent);
+        voteCounts.push(0);  // Initialize votes to 0 for each post
+        document.getElementById('newPost').value = ''; // Clear input
+        renderPosts();
+      }
+    }
+
+    function upvote(index) {
+      voteCounts[index]++;
+      renderPosts();
+    }
+
+    function downvote(index) {
+      voteCounts[index]--;
+      renderPosts();
+    }
+
+    function renderPosts() {
+      const postContainer = document.getElementById('posts');
+      postContainer.innerHTML = '';
+      posts.forEach((post, index) => {
+        const postDiv = document.createElement('div');
+        postDiv.className = 'post';
+
+        postDiv.innerHTML = `
+          <div class="post-content">${post}</div>
+          <div class="vote-buttons">
+            <button onclick="upvote(${index})">⬆️</button>
+            <div class="vote-count">${voteCounts[index]}</div>
+            <button onclick="downvote(${index})">⬇️</button>
+          </div>
+        `;
+
+        postContainer.appendChild(postDiv);
       });
     }
   </script>
