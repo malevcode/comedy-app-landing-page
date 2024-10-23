@@ -1,115 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, CheckCircle } from 'lucide-react';
+import { Search, Filter, CheckCircle, Loader2, Calendar, Cloud, Users, Star } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Sample data structure for open mics
-// In a real application, this would be fetched from your Google Sheet
-const openMics = [
-  {
-    name: "Grisly Pear",
-    day: "Sunday",
-    time: "2:00 PM",
-    latestItGoes: "3:30 PM",
-    venueName: "Grisly Pear",
-    borough: "Manhattan",
-    neighborhood: "Greenwich Village",
-    location: "107 MacDougal Street",
-    cost: "$5 cash",
-    stageTime: "5 minutes",
-    signUpInstructions: "in person only"
-  },
-  {
-    name: "Comedy Shop",
-    day: "Sunday",
-    time: "2:30 PM",
-    latestItGoes: "4:00 PM",
-    venueName: "Comedy Shop",
-    borough: "Manhattan",
-    neighborhood: "Greenwich Village",
-    location: "167 Bleecker Street",
-    cost: "$7.62 but you get a free drink or fries",
-    stageTime: "5 minutes",
-    signUpInstructions: "https://reservations.waivermaster.com/book/?qs=a44dcec9-0cb5-4773-bf53-c734db1dc10a%7C22b1df29-287a-465b-95ad-a94a46f45e20%7C1961fdf3-d94c-47db-afa2-59a679580d45&oqs=evd%3D2024-07-12%26evt%3D18%3A00&_gl=1*g0fy8f*_gcl_au*MTA3MzMwNzM5LjE3MTk0NTkzNzY.*_ga*MTA1MjU3NTYxOC4xNzE5NDU5Mzc2*_ga_RVSSW2PKR7*MTcyMDgxODE5Mi4yLjAuMTcyMDgxODE5Ni4wLjAuMA.."
-  },
-  {
-    name: "Greenwich Village Comedy Club",
-    day: "Sunday",
-    time: "3:00 PM",
-    latestItGoes: "4:45 PM",
-    venueName: "Greenwich Village Comedy Club",
-    borough: "Manhattan",
-    neighborhood: "Greenwich Village",
-    location: "126 MacDougal Street",
-    cost: "$5 cash",
-    stageTime: "5 minutes",
-    signUpInstructions: "Email DrewAndPetermic@gmail.com"
-  },
-  {
-    name: "Comedy Shop",
-    day: "Sunday",
-    time: "4:00 PM",
-    latestItGoes: "5:30 PM",
-    venueName: "Comedy Shop",
-    borough: "Manhattan",
-    neighborhood: "Greenwich Village",
-    location: "167 Bleecker Street",
-    cost: "$7.62 but you get a free drink or fries",
-    stageTime: "5 minutes",
-    signUpInstructions: "https://comedyshopnyc.com/events/"
-  },
-  {
-    name: "Fear City Comedy Club",
-    day: "Sunday",
-    time: "4:00 PM",
-    latestItGoes: "5:30 PM",
-    venueName: "Fear City Comedy Club",
-    borough: "Manhattan",
-    neighborhood: "Lower East Side",
-    location: "17 Essex Street",
-    cost: "$5 cash",
-    stageTime: ""
-  },
-  {
-    name: "Producer's Club",
-    day: "Sunday",
-    time: "5:00 PM",
-    latestItGoes: "6:00 PM",
-    venueName: "Producer's Club",
-    borough: "Manhattan",
-    neighborhood: "Hell's Kitchen",
-    location: "328 W 44th Street",
-    cost: "$5 cash",
-    stageTime: "5 minutes",
-    signUpInstructions: "in person only"
-  },
-  {
-    name: "Bushwick Comedy Club",
-    day: "Sunday",
-    time: "6:00 PM",
-    latestItGoes: "7:00 PM",
-    venueName: "Bushwick Comedy Club",
-    borough: "Brooklyn",
-    neighborhood: "Bushwick",
-    location: "259 Melrose St",
-    cost: "$5 (NO CASH)",
-    stageTime: "5 minutes",
-    signUpInstructions: "www.bushwickcomedy.com"
-  },
-  {
-    name: "Party Salad",
-    day: "Sunday",
-    time: "6:00 PM",
-    latestItGoes: "8:00 PM",
-    venueName: "Party Salad",
-    borough: "Brooklyn",
-    neighborhood: "Williamsburg",
-    location: "790 Metropolitan Ave",
-    cost: "Free (buy something at the bar, please)",
-    stageTime: "",
-    signUpInstructions: "signup there"
-  }
-  // Add the remaining open mics similarly...
-];
+const FORM_SUBMISSION_URL = 'https://script.google.com/macros/s/[YOUR_DEPLOYMENT_ID]/exec';
+const OPEN_MICS_URL = 'https://script.google.com/macros/s/[YOUR_DEPLOYMENT_ID]/exec';
 
 export default function ComedyGeniusLanding() {
   const [email, setEmail] = useState('');
@@ -119,22 +13,73 @@ export default function ComedyGeniusLanding() {
   const [spentPerMonth, setSpentPerMonth] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredMics, setFilteredMics] = useState(sampleOpenMics);
+  const [openMics, setOpenMics] = useState([]);
+  const [filteredMics, setFilteredMics] = useState([]);
   const [showOpenMics, setShowOpenMics] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetchOpenMics();
+  }, []);
+
+  const fetchOpenMics = async () => {
+    try {
+      const response = await fetch(OPEN_MICS_URL);
+      const data = await response.json();
+      setOpenMics(data);
+      setFilteredMics(data);
+    } catch (error) {
+      console.error('Error fetching open mics:', error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real application, this would send data to your Google Sheet
-    console.log('Form submitted:', { email, instagram, yearsInComedy, openMicsPerMonth, spentPerMonth });
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+    setSubmitting(true);
+
+    const formData = {
+      email,
+      instagram,
+      yearsComedy: yearsInComedy,
+      micsPerMonth: openMicsPerMonth,
+      moneySpent: spentPerMonth
+    };
+
+    try {
+      const response = await fetch(FORM_SUBMISSION_URL, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const result = await response.json();
+      
+      if (result.message) {
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+        
+        setEmail('');
+        setInstagram('');
+        setYearsInComedy('');
+        setOpenMicsPerMonth('');
+        setSpentPerMonth('');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    const filtered = sampleOpenMics.filter(mic =>
-      mic.name.toLowerCase().includes(term.toLowerCase()) ||
-      mic.location.toLowerCase().includes(term.toLowerCase())
+    const filtered = openMics.filter(mic =>
+      mic.name?.toLowerCase().includes(term.toLowerCase()) ||
+      mic.location?.toLowerCase().includes(term.toLowerCase()) ||
+      mic.day?.toLowerCase().includes(term.toLowerCase())
     );
     setFilteredMics(filtered);
   };
@@ -169,7 +114,9 @@ export default function ComedyGeniusLanding() {
                 <div key={index} className="bg-white p-4 rounded shadow">
                   <h3 className="font-semibold">{mic.name}</h3>
                   <p>{mic.location} - {mic.day} at {mic.time}</p>
-                  <p>Cost: ${mic.cost}</p>
+                  <p>Sign-up: {mic.signupTime} | Start: {mic.startTime}</p>
+                  <p>Cost: ${mic.cost} | Minutes: {mic.minutes}</p>
+                  {mic.notes && <p className="text-sm text-gray-600 mt-2">Note: {mic.notes}</p>}
                 </div>
               ))}
             </div>
@@ -177,15 +124,66 @@ export default function ComedyGeniusLanding() {
         )}
       </div>
 
-      {/* Other features */}
-      <div className="bg-gray-100 rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold"><span className="mr-2">🎙️</span> Smart Transcription</h2>
-        <p>Automatically transcribe your performances with joke identifiers. Analyze your material and track your progress over time.</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="bg-gray-100 rounded-lg p-4">
+          <h2 className="text-lg font-semibold flex items-center">
+            <span className="mr-2">🎙️</span> Smart Transcription
+          </h2>
+          <p className="text-sm">Auto-transcribe performances with joke identifiers and track your progress.</p>
+        </div>
+
+        <div className="bg-gray-100 rounded-lg p-4">
+          <h2 className="text-lg font-semibold flex items-center">
+            <span className="mr-2">🕵️</span> Plagiarism Checker
+          </h2>
+          <p className="text-sm">Ensure originality with our database of published comedy specials.</p>
+        </div>
+
+        <div className="bg-gray-100 rounded-lg p-4">
+          <h2 className="text-lg font-semibold flex items-center">
+            <Cloud className="mr-2 h-5 w-5" /> ComedyCloud Storage
+          </h2>
+          <p className="text-sm">Store hours of content for free. Organize bits, sets, and media in one secure place.</p>
+        </div>
+
+        <div className="bg-gray-100 rounded-lg p-4">
+          <h2 className="text-lg font-semibold flex items-center">
+            <Users className="mr-2 h-5 w-5" /> Social Features
+          </h2>
+          <p className="text-sm">Connect with bookers, fans, and comics. Sync schedules and discover opportunities.</p>
+        </div>
+
+        <div className="bg-gray-100 rounded-lg p-4">
+          <h2 className="text-lg font-semibold flex items-center">
+            <Calendar className="mr-2 h-5 w-5" /> Comedy Calendar
+          </h2>
+          <p className="text-sm">Smart scheduling with bookers and comics. Never double-book again.</p>
+        </div>
+
+        <div className="bg-gray-100 rounded-lg p-4">
+          <h2 className="text-lg font-semibold flex items-center">
+            <Star className="mr-2 h-5 w-5" /> Audience Mode
+          </h2>
+          <p className="text-sm">Rate shows, discover new comics, and get personalized recommendations.</p>
+        </div>
       </div>
 
-      <div className="bg-gray-100 rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold"><span className="mr-2">🕵️</span> Plagiarism Checker</h2>
-        <p>Ensure your material is original with our extensive database of published comedy specials. Avoid parallel thinking and stand out from the crowd.</p>
+      <div className="bg-blue-50 rounded-lg p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4">Discover More Comedy You'll Love</h2>
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <span className="mr-2">📝</span>
+            <p className="text-sm">Write Letterboxd-style reviews for live shows and specials</p>
+          </div>
+          <div className="flex items-start">
+            <span className="mr-2">📊</span>
+            <p className="text-sm">Get your Comedy Wrapped: yearly recap of shows, comics, and venues</p>
+          </div>
+          <div className="flex items-start">
+            <span className="mr-2">🎯</span>
+            <p className="text-sm">Personalized recommendations based on your comedy taste</p>
+          </div>
+        </div>
       </div>
 
       <div className="bg-blue-500 text-white p-8 rounded-lg text-center">
@@ -230,8 +228,19 @@ export default function ComedyGeniusLanding() {
             value={spentPerMonth}
             onChange={(e) => setSpentPerMonth(e.target.value)}
           />
-          <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">
-            Join the Waitlist
+          <button 
+            type="submit" 
+            className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 flex items-center justify-center"
+            disabled={submitting}
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              'Join the Waitlist'
+            )}
           </button>
         </form>
       </div>
