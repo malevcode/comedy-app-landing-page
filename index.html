@@ -1,46 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Filter, CheckCircle, Loader2, Calendar, Cloud, Users, Star } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import React, { useState, useEffect } from 'react'
+import { Search, Calendar, Cloud, Users, Star, CheckCircle, Loader2 } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
-// Replace these with your actual Google Apps Script deployment IDs
-const FORM_SUBMISSION_URL = 'https://script.google.com/macros/s/[YOUR_SUBMISSION_FORM_DEPLOYMENT_ID]/exec';
-const OPEN_MICS_URL = 'https://script.google.com/macros/s/[YOUR_OPEN_MICS_DEPLOYMENT_ID]/exec';
+const FORM_SUBMISSION_URL = 'https://script.google.com/macros/s/AKfycbx0tQCgVmulAJdquCEK5_Fw4d3XZ2H5HWERHpvxpzuJXLq66Q7YCeqbmkMzB1rv0Zf0/exec'
+const OPEN_MICS_URL = 'https://script.google.com/macros/s/AKfycbwCGOOT2nvhINuov55lrtgbfe6UaPtiU7g5_AdTR0br2-gXZSjGP-s9dQOtH-N13h0BJw/exec'
 
-export default function ComedyGeniusLanding() {
-  const [email, setEmail] = useState('');
-  const [instagram, setInstagram] = useState('');
-  const [yearsInComedy, setYearsInComedy] = useState('');
-  const [openMicsPerMonth, setOpenMicsPerMonth] = useState('');
-  const [spentPerMonth, setSpentPerMonth] = useState('');
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [openMics, setOpenMics] = useState([]);
-  const [filteredMics, setFilteredMics] = useState([]);
-  const [showOpenMics, setShowOpenMics] = useState(true); // Set to true by default
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+export default function Component() {
+  const [email, setEmail] = useState('')
+  const [instagram, setInstagram] = useState('')
+  const [yearsInComedy, setYearsInComedy] = useState('')
+  const [openMicsPerMonth, setOpenMicsPerMonth] = useState('')
+  const [spentPerMonth, setSpentPerMonth] = useState('')
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [openMics, setOpenMics] = useState([])
+  const [filteredMics, setFilteredMics] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    fetchOpenMics();
-  }, []);
+    fetchOpenMics()
+  }, [])
 
   const fetchOpenMics = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await fetch(OPEN_MICS_URL);
-      const data = await response.json();
-      setOpenMics(data);
-      setFilteredMics(data);
+      const response = await fetch(OPEN_MICS_URL)
+      const data = await response.json()
+      // Assuming the first row is headers
+      const headers = data[0]
+      const mics = data.slice(1).map(row => {
+        let mic = {}
+        headers.forEach((header, index) => {
+          mic[header.toLowerCase()] = row[index]
+        })
+        return mic
+      })
+      setOpenMics(mics)
+      setFilteredMics(mics)
     } catch (error) {
-      console.error('Error fetching open mics:', error);
+      console.error('Error fetching open mics:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubmitting(true)
 
     const formData = {
       email,
@@ -48,7 +55,7 @@ export default function ComedyGeniusLanding() {
       yearsComedy: yearsInComedy,
       micsPerMonth: openMicsPerMonth,
       moneySpent: spentPerMonth
-    };
+    }
 
     try {
       const response = await fetch(FORM_SUBMISSION_URL, {
@@ -57,37 +64,37 @@ export default function ComedyGeniusLanding() {
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
       
-      const result = await response.json();
+      const result = await response.json()
       
-      if (result.result === 'success') {
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
+      if (result.message === 'Thank you for signing up!') {
+        setShowSuccess(true)
+        setTimeout(() => setShowSuccess(false), 3000)
         
         // Clear form
-        setEmail('');
-        setInstagram('');
-        setYearsInComedy('');
-        setOpenMicsPerMonth('');
-        setSpentPerMonth('');
+        setEmail('')
+        setInstagram('')
+        setYearsInComedy('')
+        setOpenMicsPerMonth('')
+        setSpentPerMonth('')
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error submitting form:', error)
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-    const filtered = openMics.filter(mic =>
+  const handleSearch = (term: string) => {
+    setSearchTerm(term)
+    const filtered = openMics.filter((mic: any) =>
       mic.name?.toLowerCase().includes(term.toLowerCase()) ||
       mic.location?.toLowerCase().includes(term.toLowerCase()) ||
       mic.day?.toLowerCase().includes(term.toLowerCase())
-    );
-    setFilteredMics(filtered);
-  };
+    )
+    setFilteredMics(filtered)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
@@ -128,7 +135,7 @@ export default function ComedyGeniusLanding() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredMics.map((mic, index) => (
+              {filteredMics.map((mic: any, index: number) => (
                 <div key={index} className="bg-gray-50 p-4 rounded-lg border hover:shadow-md transition-shadow">
                   <h3 className="font-bold text-lg mb-2">{mic.name}</h3>
                   <div className="space-y-1 text-sm">
@@ -138,7 +145,7 @@ export default function ComedyGeniusLanding() {
                     </p>
                     <p className="text-gray-600">📍 {mic.location}</p>
                     <p className="text-gray-600">💰 ${mic.cost} | ⏱️ {mic.minutes} mins</p>
-                    <p className="text-gray-600">📝 Sign-up: {mic.signupTime}</p>
+                    <p className="text-gray-600">📝 Sign-up: {mic.signuptime}</p>
                     {mic.notes && (
                       <p className="text-gray-500 italic text-sm mt-2">{mic.notes}</p>
                     )}
@@ -256,5 +263,5 @@ export default function ComedyGeniusLanding() {
         )}
       </div>
     </div>
-  );
+  )
 }
