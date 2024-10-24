@@ -1,42 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Filter, CheckCircle, Loader2, Calendar, Cloud, Users, Star } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import React, { useState, useEffect } from 'react'
+import { Search, Calendar, Cloud, Users, Star, CheckCircle, Loader2, MapPin, Clock, CheckSquare } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
-const FORM_SUBMISSION_URL = 'https://script.google.com/macros/s/[YOUR_DEPLOYMENT_ID]/exec';
-const OPEN_MICS_URL = 'https://script.google.com/macros/s/[YOUR_DEPLOYMENT_ID]/exec';
+const FORM_SUBMISSION_URL = 'https://script.google.com/macros/s/AKfycbx0tQCgVmulAJdquCEK5_Fw4d3XZ2H5HWERHpvxpzuJXLq66Q7YCeqbmkMzB1rv0Zf0/exec'
+const OPEN_MICS_URL = 'https://script.google.com/macros/s/AKfycbwCGOOT2nvhINuov55lrtgbfe6UaPtiU7g5_AdTR0br2-gXZSjGP-s9dQOtH-N13h0BJw/exec'
 
-export default function ComedyGeniusLanding() {
-  const [email, setEmail] = useState('');
-  const [instagram, setInstagram] = useState('');
-  const [yearsInComedy, setYearsInComedy] = useState('');
-  const [openMicsPerMonth, setOpenMicsPerMonth] = useState('');
-  const [spentPerMonth, setSpentPerMonth] = useState('');
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [openMics, setOpenMics] = useState([]);
-  const [filteredMics, setFilteredMics] = useState([]);
-  const [showOpenMics, setShowOpenMics] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+export default function Component() {
+  const [email, setEmail] = useState('')
+  const [instagram, setInstagram] = useState('')
+  const [yearsInComedy, setYearsInComedy] = useState('')
+  const [openMicsPerMonth, setOpenMicsPerMonth] = useState('')
+  const [spentPerMonth, setSpentPerMonth] = useState('')
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [openMics, setOpenMics] = useState([])
+  const [filteredMics, setFilteredMics] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [verifiedMics, setVerifiedMics] = useState([])
 
   useEffect(() => {
-    fetchOpenMics();
-  }, []);
+    fetchOpenMics()
+  }, [])
 
   const fetchOpenMics = async () => {
+    setLoading(true)
     try {
-      const response = await fetch(OPEN_MICS_URL);
-      const data = await response.json();
-      setOpenMics(data);
-      setFilteredMics(data);
+      const response = await fetch(OPEN_MICS_URL)
+      const data = await response.json()
+      // Assuming the first row is headers
+      const headers = data[0]
+      const mics = data.slice(1).map(row => {
+        let mic = {}
+        headers.forEach((header, index) => {
+          mic[header.toLowerCase()] = row[index]
+        })
+        return mic
+      })
+      setOpenMics(mics)
+      setFilteredMics(mics)
     } catch (error) {
-      console.error('Error fetching open mics:', error);
+      console.error('Error fetching open mics:', error)
+    } finally {
+      setLoading(false)
     }
-  };
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubmitting(true)
 
     const formData = {
       email,
@@ -44,7 +56,7 @@ export default function ComedyGeniusLanding() {
       yearsComedy: yearsInComedy,
       micsPerMonth: openMicsPerMonth,
       moneySpent: spentPerMonth
-    };
+    }
 
     try {
       const response = await fetch(FORM_SUBMISSION_URL, {
@@ -53,206 +65,232 @@ export default function ComedyGeniusLanding() {
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
       
-      const result = await response.json();
+      const result = await response.json()
       
-      if (result.message) {
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
+      if (result.message === 'Thank you for signing up!') {
+        setShowSuccess(true)
+        setTimeout(() => setShowSuccess(false), 3000)
         
-        setEmail('');
-        setInstagram('');
-        setYearsInComedy('');
-        setOpenMicsPerMonth('');
-        setSpentPerMonth('');
+        // Clear form
+        setEmail('')
+        setInstagram('')
+        setYearsInComedy('')
+        setOpenMicsPerMonth('')
+        setSpentPerMonth('')
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error submitting form:', error)
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-    const filtered = openMics.filter(mic =>
+  const handleSearch = (term: string) => {
+    setSearchTerm(term)
+    const filtered = openMics.filter((mic: any) =>
       mic.name?.toLowerCase().includes(term.toLowerCase()) ||
       mic.location?.toLowerCase().includes(term.toLowerCase()) ||
-      mic.day?.toLowerCase().includes(term.toLowerCase())
-    );
-    setFilteredMics(filtered);
-  };
+      mic.day?.toLowerCase().includes(term.toLowerCase()) ||
+      mic.venue?.toLowerCase().includes(term.toLowerCase()) ||
+      mic.neighborhood?.toLowerCase().includes(term.toLowerCase())
+    )
+    setFilteredMics(filtered)
+  }
+
+  const toggleVerifiedMic = (micId: string) => {
+    setVerifiedMics(prev => 
+      prev.includes(micId) 
+        ? prev.filter(id => id !== micId)
+        : [...prev, micId]
+    )
+  }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">ComedyGenius: Elevate Your Comedy Career</h1>
-      
-      <div className="bg-gray-100 rounded-lg p-6 mb-6 cursor-pointer" onClick={() => setShowOpenMics(!showOpenMics)}>
-        <h2 className="text-xl font-semibold flex items-center">
-          <span className="mr-2">🎤</span> Open Mic Finder
-        </h2>
-        <p className="mb-4">Discover open mics and shows in your area with ease. Never miss an opportunity to perform and hone your craft.</p>
-        
-        {showOpenMics && (
-          <div className="mt-4">
-            <div className="flex gap-2 mb-4">
-              <input
-                type="text"
-                placeholder="Search open mics..."
-                className="flex-1 p-2 border rounded"
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
-              <button className="bg-blue-500 text-white p-2 rounded">
-                <Search size={20} />
-              </button>
+    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-4">
+            ComedyGenius
+          </h1>
+          <p className="text-xl text-gray-600">
+            Elevate your comedy career with smart tools for performers and fans
+          </p>
+        </div>
+
+        {/* Open Mic Finder - Featured Section */}
+        <div className="bg-white rounded-xl shadow-xl p-6 mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold flex items-center">
+              <span className="mr-2">🎤</span> NYC Open Mic Finder
+            </h2>
+            <div className="flex gap-4">
+              <div className="relative flex-1 min-w-[300px]">
+                <input
+                  type="text"
+                  placeholder="Search by name, location, or day..."
+                  className="w-full p-3 pr-10 border rounded-lg"
+                  value={searchTerm}
+                  onChange={(e) => handleSearch(e.target.value)}
+                />
+                <Search className="absolute right-3 top-3 text-gray-400" />
+              </div>
             </div>
-            
-            <div className="space-y-2">
-              {filteredMics.map((mic, index) => (
-                <div key={index} className="bg-white p-4 rounded shadow">
-                  <h3 className="font-semibold">{mic.name}</h3>
-                  <p>{mic.location} - {mic.day} at {mic.time}</p>
-                  <p>Sign-up: {mic.signupTime} | Start: {mic.startTime}</p>
-                  <p>Cost: ${mic.cost} | Minutes: {mic.minutes}</p>
-                  {mic.notes && <p className="text-sm text-gray-600 mt-2">Note: {mic.notes}</p>}
+          </div>
+
+          {loading ? (
+            <div className="flex justify-center p-8">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredMics.map((mic: any, index: number) => (
+                <div key={index} className="bg-gray-50 p-4 rounded-lg border hover:shadow-md transition-shadow">
+                  <h3 className="font-bold text-lg mb-2">{mic.name}</h3>
+                  <div className="space-y-1 text-sm">
+                    <p className="flex items-center text-gray-600">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      {mic.day} at {mic.time}
+                    </p>
+                    <p className="flex items-center text-gray-600">
+                      <MapPin className="h-4 w-4 mr-2" />
+                      {mic.venue}, {mic.neighborhood}
+                    </p>
+                    <p className="flex items-center text-gray-600">
+                      <Clock className="h-4 w-4 mr-2" />
+                      {mic.time} - {mic['latest it will go']}
+                    </p>
+                    <p className="text-gray-600">💰 ${mic.cost} | ⏱️ {mic['stage time']} mins</p>
+                    <p className="text-gray-600">📝 Sign-up: {mic.signuptime}</p>
+                    {mic.notes && (
+                      <p className="text-gray-500 italic text-sm mt-2">{mic.notes}</p>
+                    )}
+                    <button
+                      onClick={() => toggleVerifiedMic(mic.id)}
+                      className={`mt-2 px-3 py-1 rounded-full text-xs font-semibold ${
+                        verifiedMics.includes(mic.id)
+                          ? 'bg-green-500 text-white'
+                          : 'bg-gray-200 text-gray-700'
+                      }`}
+                    >
+                      <CheckSquare className="inline-block w-4 h-4 mr-1" />
+                      {verifiedMics.includes(mic.id) ? 'Verified Active' : 'Mark as Verified'}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
+          )}
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white rounded-lg p-6 shadow-md">
+            <h3 className="font-semibold text-lg mb-2 flex items-center">
+              <Cloud className="mr-2 h-5 w-5 text-blue-500" />
+              Smart Transcription
+            </h3>
+            <p className="text-gray-600">Auto-transcribe performances with joke identifiers.</p>
           </div>
+
+          <div className="bg-white rounded-lg p-6 shadow-md">
+            <h3 className="font-semibold text-lg mb-2 flex items-center">
+              <Users className="mr-2 h-5 w-5 text-blue-500" />
+              Social Features
+            </h3>
+            <p className="text-gray-600">Connect with bookers, fans, and comics.</p>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 shadow-md">
+            <h3 className="font-semibold text-lg mb-2 flex items-center">
+              <Star className="mr-2 h-5 w-5 text-blue-500" />
+              Audience Mode
+            </h3>
+            <p className="text-gray-600">Rate shows and get personalized recommendations.</p>
+          </div>
+        </div>
+
+        {/* Sign Up Form */}
+        <div className="bg-blue-600 rounded-xl shadow-xl p-8 text-white">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold mb-6 text-center">
+              Join the Comedy Revolution
+            </h2>
+            <p className="text-blue-100 mb-8 text-center text-lg">
+              Be among the first to access ComedyGenius and transform your comedy journey
+            </p>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="email"
+                  placeholder="Email Address *"
+                  required
+                  className="w-full p-3 rounded-lg text-gray-900"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Instagram Handle *"
+                  required
+                  className="w-full p-3 rounded-lg text-gray-900"
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input
+                  type="number"
+                  placeholder="Years in Comedy"
+                  className="w-full p-3 rounded-lg text-gray-900"
+                  value={yearsInComedy}
+                  onChange={(e) => setYearsInComedy(e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Open Mics per Month"
+                  className="w-full p-3 rounded-lg text-gray-900"
+                  value={openMicsPerMonth}
+                  onChange={(e) => setOpenMicsPerMonth(e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="$ Spent on Mics Monthly"
+                  className="w-full p-3 rounded-lg text-gray-900"
+                  value={spentPerMonth}
+                  onChange={(e) => setSpentPerMonth(e.target.value)}
+                />
+              </div>
+              <button 
+                type="submit" 
+                className="w-full bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg hover:bg-blue-50 transition-colors"
+                disabled={submitting}
+              >
+                {submitting ? (
+                  <div className="flex items-center justify-center">
+                    <Loader2 className="animate-spin mr-2" />
+                    Joining...
+                  </div>
+                ) : (
+                  'Join the Waitlist'
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {showSuccess && (
+          <Alert className="mt-6 bg-green-100 text-green-800 rounded-lg">
+            <CheckCircle className="h-5 w-5" />
+            <AlertDescription>
+              Thanks for signing up! We'll be in touch soon.
+            </AlertDescription>
+          </Alert>
         )}
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h2 className="text-lg font-semibold flex items-center">
-            <span className="mr-2">🎙️</span> Smart Transcription
-          </h2>
-          <p className="text-sm">Auto-transcribe performances with joke identifiers and track your progress.</p>
-        </div>
-
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h2 className="text-lg font-semibold flex items-center">
-            <span className="mr-2">🕵️</span> Plagiarism Checker
-          </h2>
-          <p className="text-sm">Ensure originality with our database of published comedy specials.</p>
-        </div>
-
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h2 className="text-lg font-semibold flex items-center">
-            <Cloud className="mr-2 h-5 w-5" /> ComedyCloud Storage
-          </h2>
-          <p className="text-sm">Store hours of content for free. Organize bits, sets, and media in one secure place.</p>
-        </div>
-
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h2 className="text-lg font-semibold flex items-center">
-            <Users className="mr-2 h-5 w-5" /> Social Features
-          </h2>
-          <p className="text-sm">Connect with bookers, fans, and comics. Sync schedules and discover opportunities.</p>
-        </div>
-
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h2 className="text-lg font-semibold flex items-center">
-            <Calendar className="mr-2 h-5 w-5" /> Comedy Calendar
-          </h2>
-          <p className="text-sm">Smart scheduling with bookers and comics. Never double-book again.</p>
-        </div>
-
-        <div className="bg-gray-100 rounded-lg p-4">
-          <h2 className="text-lg font-semibold flex items-center">
-            <Star className="mr-2 h-5 w-5" /> Audience Mode
-          </h2>
-          <p className="text-sm">Rate shows, discover new comics, and get personalized recommendations.</p>
-        </div>
-      </div>
-
-      <div className="bg-blue-50 rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Discover More Comedy You'll Love</h2>
-        <div className="space-y-3">
-          <div className="flex items-start">
-            <span className="mr-2">📝</span>
-            <p className="text-sm">Write Letterboxd-style reviews for live shows and specials</p>
-          </div>
-          <div className="flex items-start">
-            <span className="mr-2">📊</span>
-            <p className="text-sm">Get your Comedy Wrapped: yearly recap of shows, comics, and venues</p>
-          </div>
-          <div className="flex items-start">
-            <span className="mr-2">🎯</span>
-            <p className="text-sm">Personalized recommendations based on your comedy taste</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-blue-500 text-white p-8 rounded-lg text-center">
-        <h2 className="text-2xl font-bold mb-4">Ready to Take Your Comedy to the Next Level?</h2>
-        <p className="mb-4">Be among the first to know when ComedyGenius launches. Sign up now!</p>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Your Email"
-            required
-            className="w-full p-2 rounded text-black"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Instagram Handle"
-            required
-            className="w-full p-2 rounded text-black"
-            value={instagram}
-            onChange={(e) => setInstagram(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Years in Comedy"
-            className="w-full p-2 rounded text-black"
-            value={yearsInComedy}
-            onChange={(e) => setYearsInComedy(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Open mics per month"
-            className="w-full p-2 rounded text-black"
-            value={openMicsPerMonth}
-            onChange={(e) => setOpenMicsPerMonth(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="$ spent on mics per month"
-            className="w-full p-2 rounded text-black"
-            value={spentPerMonth}
-            onChange={(e) => setSpentPerMonth(e.target.value)}
-          />
-          <button 
-            type="submit" 
-            className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 flex items-center justify-center"
-            disabled={submitting}
-          >
-            {submitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              'Join the Waitlist'
-            )}
-          </button>
-        </form>
-      </div>
-
-      {showSuccess && (
-        <Alert className="mt-4 bg-green-100 border-green-500">
-          <CheckCircle className="h-4 w-4" />
-          <AlertDescription>
-            Thanks for signing up! We'll be in touch soon.
-          </AlertDescription>
-        </Alert>
-      )}
     </div>
-  );
+  )
 }
