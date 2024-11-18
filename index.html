@@ -1,184 +1,175 @@
-import React, { useState, useEffect } from 'react'
-import { Search, Calendar, Cloud, Users, Star, CheckCircle, Loader2, MapPin, Clock, CheckSquare } from 'lucide-react'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, CheckCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
-const FORM_SUBMISSION_URL = 'https://script.google.com/macros/s/AKfycbx0tQCgVmulAJdquCEK5_Fw4d3XZ2H5HWERHpvxpzuJXLq66Q7YCeqbmkMzB1rv0Zf0/exec'
-const OPEN_MICS_URL = 'https://script.google.com/macros/s/AKfycbwCGOOT2nvhINuov55lrtgbfe6UaPtiU7g5_AdTR0br2-gXZSjGP-s9dQOtH-N13h0BJw/exec'
-
-export default function Component() {
-  const [email, setEmail] = useState('')
-  const [instagram, setInstagram] = useState('')
-  const [yearsInComedy, setYearsInComedy] = useState('')
-  const [openMicsPerMonth, setOpenMicsPerMonth] = useState('')
-  const [spentPerMonth, setSpentPerMonth] = useState('')
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [openMics, setOpenMics] = useState([])
-  const [filteredMics, setFilteredMics] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [verifiedMics, setVerifiedMics] = useState([])
-
-  useEffect(() => {
-    fetchOpenMics()
-  }, [])
-
-  const fetchOpenMics = async () => {
-    setLoading(true)
-    try {
-      const response = await fetch(OPEN_MICS_URL)
-      const data = await response.json()
-      // Assuming the first row is headers
-      const headers = data[0]
-      const mics = data.slice(1).map(row => {
-        let mic = {}
-        headers.forEach((header, index) => {
-          mic[header.toLowerCase()] = row[index]
-        })
-        return mic
-      })
-      setOpenMics(mics)
-      setFilteredMics(mics)
-    } catch (error) {
-      console.error('Error fetching open mics:', error)
-    } finally {
-      setLoading(false)
-    }
+// Sample data structure for open mics
+// In a real application, this would be fetched from your Google Sheet
+const openMics = [
+  {
+    name: "Grisly Pear",
+    day: "Sunday",
+    time: "2:00 PM",
+    latestItGoes: "3:30 PM",
+    venueName: "Grisly Pear",
+    borough: "Manhattan",
+    neighborhood: "Greenwich Village",
+    location: "107 MacDougal Street",
+    cost: "$5 cash",
+    stageTime: "5 minutes",
+    signUpInstructions: "in person only"
+  },
+  {
+    name: "Comedy Shop",
+    day: "Sunday",
+    time: "2:30 PM",
+    latestItGoes: "4:00 PM",
+    venueName: "Comedy Shop",
+    borough: "Manhattan",
+    neighborhood: "Greenwich Village",
+    location: "167 Bleecker Street",
+    cost: "$7.62 but you get a free drink or fries",
+    stageTime: "5 minutes",
+    signUpInstructions: "https://reservations.waivermaster.com/book/?qs=a44dcec9-0cb5-4773-bf53-c734db1dc10a%7C22b1df29-287a-465b-95ad-a94a46f45e20%7C1961fdf3-d94c-47db-afa2-59a679580d45&oqs=evd%3D2024-07-12%26evt%3D18%3A00&_gl=1*g0fy8f*_gcl_au*MTA3MzMwNzM5LjE3MTk0NTkzNzY.*_ga*MTA1MjU3NTYxOC4xNzE5NDU5Mzc2*_ga_RVSSW2PKR7*MTcyMDgxODE5Mi4yLjAuMTcyMDgxODE5Ni4wLjAuMA.."
+  },
+  {
+    name: "Greenwich Village Comedy Club",
+    day: "Sunday",
+    time: "3:00 PM",
+    latestItGoes: "4:45 PM",
+    venueName: "Greenwich Village Comedy Club",
+    borough: "Manhattan",
+    neighborhood: "Greenwich Village",
+    location: "126 MacDougal Street",
+    cost: "$5 cash",
+    stageTime: "5 minutes",
+    signUpInstructions: "Email DrewAndPetermic@gmail.com"
+  },
+  {
+    name: "Comedy Shop",
+    day: "Sunday",
+    time: "4:00 PM",
+    latestItGoes: "5:30 PM",
+    venueName: "Comedy Shop",
+    borough: "Manhattan",
+    neighborhood: "Greenwich Village",
+    location: "167 Bleecker Street",
+    cost: "$7.62 but you get a free drink or fries",
+    stageTime: "5 minutes",
+    signUpInstructions: "https://comedyshopnyc.com/events/"
+  },
+  {
+    name: "Fear City Comedy Club",
+    day: "Sunday",
+    time: "4:00 PM",
+    latestItGoes: "5:30 PM",
+    venueName: "Fear City Comedy Club",
+    borough: "Manhattan",
+    neighborhood: "Lower East Side",
+    location: "17 Essex Street",
+    cost: "$5 cash",
+    stageTime: ""
+  },
+  {
+    name: "Producer's Club",
+    day: "Sunday",
+    time: "5:00 PM",
+    latestItGoes: "6:00 PM",
+    venueName: "Producer's Club",
+    borough: "Manhattan",
+    neighborhood: "Hell's Kitchen",
+    location: "328 W 44th Street",
+    cost: "$5 cash",
+    stageTime: "5 minutes",
+    signUpInstructions: "in person only"
+  },
+  {
+    name: "Bushwick Comedy Club",
+    day: "Sunday",
+    time: "6:00 PM",
+    latestItGoes: "7:00 PM",
+    venueName: "Bushwick Comedy Club",
+    borough: "Brooklyn",
+    neighborhood: "Bushwick",
+    location: "259 Melrose St",
+    cost: "$5 (NO CASH)",
+    stageTime: "5 minutes",
+    signUpInstructions: "www.bushwickcomedy.com"
+  },
+  {
+    name: "Party Salad",
+    day: "Sunday",
+    time: "6:00 PM",
+    latestItGoes: "8:00 PM",
+    venueName: "Party Salad",
+    borough: "Brooklyn",
+    neighborhood: "Williamsburg",
+    location: "790 Metropolitan Ave",
+    cost: "Free (buy something at the bar, please)",
+    stageTime: "",
+    signUpInstructions: "signup there"
   }
+  // Add the remaining open mics similarly...
+];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitting(true)
+export default function ComedyGeniusLanding() {
+  const [email, setEmail] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [yearsInComedy, setYearsInComedy] = useState('');
+  const [openMicsPerMonth, setOpenMicsPerMonth] = useState('');
+  const [spentPerMonth, setSpentPerMonth] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredMics, setFilteredMics] = useState(sampleOpenMics);
+  const [showOpenMics, setShowOpenMics] = useState(false);
 
-    const formData = {
-      email,
-      instagram,
-      yearsComedy: yearsInComedy,
-      micsPerMonth: openMicsPerMonth,
-      moneySpent: spentPerMonth
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // In a real application, this would send data to your Google Sheet
+    console.log('Form submitted:', { email, instagram, yearsInComedy, openMicsPerMonth, spentPerMonth });
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
+  };
 
-    try {
-      const response = await fetch(FORM_SUBMISSION_URL, {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      
-      const result = await response.json()
-      
-      if (result.message === 'Thank you for signing up!') {
-        setShowSuccess(true)
-        setTimeout(() => setShowSuccess(false), 3000)
-        
-        // Clear form
-        setEmail('')
-        setInstagram('')
-        setYearsInComedy('')
-        setOpenMicsPerMonth('')
-        setSpentPerMonth('')
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error)
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleSearch = (term: string) => {
-    setSearchTerm(term)
-    const filtered = openMics.filter((mic: any) =>
-      mic.name?.toLowerCase().includes(term.toLowerCase()) ||
-      mic.location?.toLowerCase().includes(term.toLowerCase()) ||
-      mic.day?.toLowerCase().includes(term.toLowerCase()) ||
-      mic.venue?.toLowerCase().includes(term.toLowerCase()) ||
-      mic.neighborhood?.toLowerCase().includes(term.toLowerCase())
-    )
-    setFilteredMics(filtered)
-  }
-
-  const toggleVerifiedMic = (micId: string) => {
-    setVerifiedMics(prev => 
-      prev.includes(micId) 
-        ? prev.filter(id => id !== micId)
-        : [...prev, micId]
-    )
-  }
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    const filtered = sampleOpenMics.filter(mic =>
+      mic.name.toLowerCase().includes(term.toLowerCase()) ||
+      mic.location.toLowerCase().includes(term.toLowerCase())
+    );
+    setFilteredMics(filtered);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-4">
-            ComedyGenius
-          </h1>
-          <p className="text-xl text-gray-600">
-            Elevate your comedy career with smart tools for performers and fans
-          </p>
-        </div>
-
-        {/* Open Mic Finder - Featured Section */}
-        <div className="bg-white rounded-xl shadow-xl p-6 mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold flex items-center">
-              <span className="mr-2">🎤</span> NYC Open Mic Finder
-            </h2>
-            <div className="flex gap-4">
-              <div className="relative flex-1 min-w-[300px]">
-                <input
-                  type="text"
-                  placeholder="Search by name, location, or day..."
-                  className="w-full p-3 pr-10 border rounded-lg"
-                  value={searchTerm}
-                  onChange={(e) => handleSearch(e.target.value)}
-                />
-                <Search className="absolute right-3 top-3 text-gray-400" />
-              </div>
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold text-center mb-8">ComedyGenius: Elevate Your Comedy Career</h1>
+      
+      <div className="bg-gray-100 rounded-lg p-6 mb-6 cursor-pointer" onClick={() => setShowOpenMics(!showOpenMics)}>
+        <h2 className="text-xl font-semibold flex items-center">
+          <span className="mr-2">🎤</span> Open Mic Finder
+        </h2>
+        <p className="mb-4">Discover open mics and shows in your area with ease. Never miss an opportunity to perform and hone your craft.</p>
+        
+        {showOpenMics && (
+          <div className="mt-4">
+            <div className="flex gap-2 mb-4">
+              <input
+                type="text"
+                placeholder="Search open mics..."
+                className="flex-1 p-2 border rounded"
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+              <button className="bg-blue-500 text-white p-2 rounded">
+                <Search size={20} />
+              </button>
             </div>
-          </div>
-
-          {loading ? (
-            <div className="flex justify-center p-8">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredMics.map((mic: any, index: number) => (
-                <div key={index} className="bg-gray-50 p-4 rounded-lg border hover:shadow-md transition-shadow">
-                  <h3 className="font-bold text-lg mb-2">{mic.name}</h3>
-                  <div className="space-y-1 text-sm">
-                    <p className="flex items-center text-gray-600">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      {mic.day} at {mic.time}
-                    </p>
-                    <p className="flex items-center text-gray-600">
-                      <MapPin className="h-4 w-4 mr-2" />
-                      {mic.venue}, {mic.neighborhood}
-                    </p>
-                    <p className="flex items-center text-gray-600">
-                      <Clock className="h-4 w-4 mr-2" />
-                      {mic.time} - {mic['latest it will go']}
-                    </p>
-                    <p className="text-gray-600">💰 ${mic.cost} | ⏱️ {mic['stage time']} mins</p>
-                    <p className="text-gray-600">📝 Sign-up: {mic.signuptime}</p>
-                    {mic.notes && (
-                      <p className="text-gray-500 italic text-sm mt-2">{mic.notes}</p>
-                    )}
-                    <button
-                      onClick={() => toggleVerifiedMic(mic.id)}
-                      className={`mt-2 px-3 py-1 rounded-full text-xs font-semibold ${
-                        verifiedMics.includes(mic.id)
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-200 text-gray-700'
-                      }`}
-                    >
-                      <CheckSquare className="inline-block w-4 h-4 mr-1" />
-                      {verifiedMics.includes(mic.id) ? 'Verified Active' : 'Mark as Verified'}
-                    </button>
-                  </div>
+            
+            <div className="space-y-2">
+              {filteredMics.map((mic, index) => (
+                <div key={index} className="bg-white p-4 rounded shadow">
+                  <h3 className="font-semibold">{mic.name}</h3>
+                  <p>{mic.location} - {mic.day} at {mic.time}</p>
+                  <p>Cost: ${mic.cost}</p>
                 </div>
               ))}
             </div>
