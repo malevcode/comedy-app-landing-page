@@ -21,14 +21,24 @@ function serveFile(filePath, contentType, response) {
     });
 }
 
+// Static HTML pages (no template substitution needed)
+const staticPages = ['/privacy.html', '/terms.html', '/faq.html', '/support.html'];
+
 // Create the HTTP server
 http.createServer((request, response) => {
-    if (request.url === '/' || request.url === '/index.html') {
+    // Strip query strings
+    const url = request.url.split('?')[0];
+
+    if (url === '/' || url === '/index.html') {
         serveHTML(request, response);
-    } else if (request.url.match('.css$')) {
-        serveFile(path.join(__dirname, request.url), 'text/css', response);
-    } else if (request.url.match('.js$')) {
-        serveFile(path.join(__dirname, request.url), 'application/javascript', response);
+    } else if (staticPages.includes(url)) {
+        serveFile(path.join(__dirname, url), 'text/html', response);
+    } else if (url.match('.css$')) {
+        serveFile(path.join(__dirname, url), 'text/css', response);
+    } else if (url.match('.js$')) {
+        serveFile(path.join(__dirname, url), 'application/javascript', response);
+    } else if (url.match('.html$')) {
+        serveFile(path.join(__dirname, url), 'text/html', response);
     } else {
         response.writeHead(404);
         response.end('Page Not Found');

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ — Comediq</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0A0A0A;
+      --surface: #111111;
+      --text: #F5F2EB;
+      --muted: #888880;
+      --dim: #444440;
+      --blue: #1D4DB5;
+      --yellow: #FFC72C;
+      --red: #E63946;
+      --green: #3DAA6A;
+      --border: rgba(29, 77, 181, 0.2);
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 0 0 80px;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header a { text-decoration: none; }
+    .logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--blue);
+    }
+    .back {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .back:hover { color: var(--text); }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 32px 0;
+    }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      letter-spacing: 3px;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.6px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin: 48px 0 16px;
+    }
+    .faq-item {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+    }
+    .faq-item:last-child { border-bottom: 1px solid var(--border); }
+    .question {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .answer {
+      color: var(--text);
+      opacity: 0.8;
+      font-size: 14px;
+    }
+    .answer p { margin-bottom: 10px; }
+    .answer p:last-child { margin-bottom: 0; }
+    .tag {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-right: 4px;
+    }
+    .tag-yellow { background: rgba(255,199,44,0.15); color: var(--yellow); border: 1px solid rgba(255,199,44,0.3); }
+    .tag-red { background: rgba(230,57,70,0.15); color: var(--red); border: 1px solid rgba(230,57,70,0.3); }
+    .tag-blue { background: rgba(29,77,181,0.15); color: #5B89E8; border: 1px solid rgba(29,77,181,0.3); }
+    .tag-green { background: rgba(61,170,106,0.15); color: var(--green); border: 1px solid rgba(61,170,106,0.3); }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0 32px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://comediq.us" class="logo">COMEDIQ</a>
+    <a href="https://comediq.us" class="back">← BACK TO HOME</a>
+  </header>
+
+  <div class="container">
+    <h1>FAQ</h1>
+    <p class="subtitle">ANSWERS TO THINGS COMEDIANS ACTUALLY ASK</p>
+
+    <!-- RECORDING -->
+    <p class="section-label">Recording</p>
+
+    <div class="faq-item">
+      <p class="question">Why does the app tell me to turn on Airplane Mode?</p>
+      <div class="answer">
+        <p>Open mic venues — especially basements — have notoriously bad cell signal. A call, notification, or dropped signal mid-set can corrupt your recording or cause it to cut out entirely. Airplane Mode removes all of that risk. The app reminds you every single time, no "don't show again" option, because it's that important.</p>
+        <p>Once the set is done and you've stopped recording, turn Airplane Mode off and the app uploads and processes automatically.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">What if I forget to turn Airplane Mode back on and lose my connection mid-upload?</p>
+      <div class="answer">
+        <p>The app has an offline queue. If you're not connected when a set finishes recording, it saves the audio locally and queues it for processing. As soon as you have a connection, it drains the queue automatically — you don't have to do anything.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">How do I stop the recording?</p>
+      <div class="answer">
+        <p>Hold the "HOLD TO STOP" button for 2.5 seconds. You'll feel a haptic at the start and a stronger one when it confirms. This is intentional — it prevents accidentally stopping your set with a tap.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">How long can I record?</p>
+      <div class="answer">
+        <p>There's no hard limit in the app. The practical limit is AssemblyAI's transcription API (handles files up to several hours) and Supabase Storage (generous on the free tier). A typical open mic set (5–7 minutes) or feature spot (20 minutes) is well within range.</p>
+      </div>
+    </div>
+
+    <!-- ANALYSIS -->
+    <p class="section-label">Analysis</p>
+
+    <div class="faq-item">
+      <p class="question">How does Comediq know when I got a laugh?</p>
+      <div class="answer">
+        <p>It uses two signals: <strong>pause analysis</strong> and <strong>Claude's interpretation</strong>.</p>
+        <p>During transcription, AssemblyAI returns word-level timestamps. Gaps longer than 800ms between words are flagged as potential laugh moments — the longer the gap, the bigger the laugh proxy score. Claude then reads the full transcript and separately evaluates which bits likely landed based on phrasing, structure, and context.</p>
+        <p>Neither signal is perfect. The laugh detection is a proxy — it doesn't actually hear the audience. If you record in a noisy room and speak over the laughs, the pauses won't be there. But across multiple sets, the patterns become meaningful.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">What does the bit score mean?</p>
+      <div class="answer">
+        <p>Each bit gets a score from 1–10 based on Claude's analysis of the transcript. It considers structure (setup/punchline clarity), technique (callbacks, misdirection, rule of threes, crowd work), laugh proxy signals, and overall delivery pattern. 7+ is green, 5–6 is blue, below 5 is red.</p>
+        <p>The score reflects one performance. A bit that consistently scores 7+ across multiple sets is genuinely working. A bit that scores 4 once might just have been a bad night.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">What are the tag colors I see in the transcript?</p>
+      <div class="answer">
+        <p>When TAGS are turned on, Claude annotates your transcript with color-coded markers:</p>
+        <p>
+          <span class="tag tag-yellow">FUNNY</span> moments that likely got a laugh or landed well<br/>
+          <span class="tag tag-red">FLUFF</span> sections that didn't add much — filler, throat-clearing, tangents<br/>
+          <span class="tag tag-blue">ON STAGE</span> things you said on stage that differ from what you'd written
+        </p>
+        <p>Turn tags off if you just want to read your transcript clean.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">Does Comediq record what the audience says?</p>
+      <div class="answer">
+        <p>It records whatever your phone's microphone picks up. Audience reactions, laughter, crowd work responses — if your phone can hear it, it gets transcribed. This is actually useful for reviewing crowd work exchanges. All of that audio is subject to the same privacy handling described in our <a href="/privacy.html">Privacy Policy</a>.</p>
+        <p>You are responsible for complying with any applicable recording consent laws in your jurisdiction when recording in venues.</p>
+      </div>
+    </div>
+
+    <!-- JOKE CRM -->
+    <p class="section-label">Joke CRM</p>
+
+    <div class="faq-item">
+      <p class="question">What is a "bit identity"?</p>
+      <div class="answer">
+        <p>A bit identity is the canonical record for a joke — the single source of truth that tracks every time you've performed that bit across different sets. When you record a set, Comediq uses fuzzy name matching to figure out which detected bits correspond to which joke identities. That way, you can see "this bit has been performed 8 times, with an average score of 6.4" rather than 8 disconnected data points.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">Why is my new bit in Archive instead of Active?</p>
+      <div class="answer">
+        <p>Bits detected from a recording start in Archive with a status of "premise." This is intentional — recordings pick up a lot of premises, crowd work fragments, and half-formed ideas that aren't active works-in-progress yet. Active should only contain what you're consciously developing right now.</p>
+        <p>Promote a bit to Active by tapping it and changing the status to "being written," "has punchline," or "performance ready."</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">I have duplicate jokes with slightly different names. How do I fix that?</p>
+      <div class="answer">
+        <p>Use the Merge feature in the Archive section. Tap Merge, select which identity to keep (the "winner"), tap the duplicate you want to absorb, and confirm. All performances from the duplicate get reassigned to the keeper, and the duplicate is deleted.</p>
+        <p>The fuzzy matching threshold (75% similarity) catches most duplicates automatically, but bits with meaningfully different names will slip through and need manual merging.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">What does "auto-retire" mean?</p>
+      <div class="answer">
+        <p>If you haven't performed a bit in 30 days, Comediq automatically moves it to "retired" status in your Archive. It doesn't get deleted — the history and scores are all still there. It just gets out of your Active list so you're not looking at a joke you've dropped.</p>
+        <p>You can un-retire it any time by changing the status back.</p>
+      </div>
+    </div>
+
+    <!-- DATA & PRIVACY -->
+    <p class="section-label">Data & Privacy</p>
+
+    <div class="faq-item">
+      <p class="question">Where is my audio stored?</p>
+      <div class="answer">
+        <p>Audio files are uploaded to Supabase Storage, a cloud storage service. Files are stored in a private bucket — they're not publicly accessible via URL without authentication. See our <a href="/privacy.html">Privacy Policy</a> for full details.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">Does Comediq read my jokes?</p>
+      <div class="answer">
+        <p>Yes — that's the product. Your transcript is sent to Anthropic's Claude API for analysis. Claude reads the full transcript, identifies bits, scores them, and returns structured data. Anthropic's API processes your data under their privacy policy (anthropic.com/privacy). We do not use your jokes to train any AI models.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <p class="question">Can I delete my data?</p>
+      <div class="answer">
+        <p>Yes. Individual sets can be deleted from within the app (swipe or long-press). If you want everything deleted — all sets, bits, recordings, and notes — email <a href="mailto:adam@comediq.us">adam@comediq.us</a> and we'll wipe it within 7 days.</p>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <p>Still have a question? <a href="/support.html">Contact support</a> or email <a href="mailto:adam@comediq.us">adam@comediq.us</a>.</p>
+
+    <br/>
+    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.5px;"><a href="/privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="/terms.html">Terms of Service</a> &nbsp;·&nbsp; <a href="/support.html">Support</a></p>
+  </div>
+</body>
+</html>

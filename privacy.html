@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Comediq</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0A0A0A;
+      --surface: #111111;
+      --text: #F5F2EB;
+      --muted: #888880;
+      --dim: #555550;
+      --blue: #1D4DB5;
+      --border: rgba(29, 77, 181, 0.2);
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 0 0 80px;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header a { text-decoration: none; }
+    .logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--blue);
+    }
+    .back {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .back:hover { color: var(--text); }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 32px 0;
+    }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      letter-spacing: 3px;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .effective {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+    h2 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1.4px;
+      color: var(--muted);
+      margin: 40px 0 12px;
+      text-transform: uppercase;
+    }
+    p { color: var(--text); margin-bottom: 16px; opacity: 0.85; }
+    ul { padding-left: 20px; margin-bottom: 16px; }
+    ul li { color: var(--text); opacity: 0.85; margin-bottom: 8px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .card p { margin-bottom: 0; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://comediq.us" class="logo">COMEDIQ</a>
+    <a href="https://comediq.us" class="back">← BACK TO HOME</a>
+  </header>
+
+  <div class="container">
+    <h1>PRIVACY POLICY</h1>
+    <p class="effective">EFFECTIVE DATE: APRIL 7, 2026</p>
+
+    <div class="card">
+      <p>Comediq is a personal performance tool for stand-up comedians. We take your material seriously — your jokes are your IP, and your data is yours. This policy explains exactly what we collect, why, and who touches it.</p>
+    </div>
+
+    <h2>Who We Are</h2>
+    <p>Comediq ("we," "us," or "our") is operated by Adam Malev. You can reach us at <a href="mailto:adam@comediq.us">adam@comediq.us</a> or via the <a href="/support.html">support page</a>.</p>
+
+    <h2>What We Collect</h2>
+    <p>When you use the Comediq app, the following data is generated and stored:</p>
+    <ul>
+      <li><strong>Audio recordings</strong> — the audio file of your set, uploaded to secure cloud storage</li>
+      <li><strong>Transcripts</strong> — word-level transcripts with timestamps, generated from your audio</li>
+      <li><strong>Performance metadata</strong> — venue, date, set duration, score, laugh timestamps, pause data</li>
+      <li><strong>Joke data</strong> — bit names, punchlines, setups, feedback, performance history</li>
+      <li><strong>Confidence ratings</strong> — self-reported ratings you log manually</li>
+      <li><strong>Quick notes</strong> — freeform text notes you type in the app</li>
+      <li><strong>Set plans</strong> — the run orders you build before shows</li>
+      <li><strong>Post-set reflections</strong> — audience reception, confidence score, personal notes you log after a set</li>
+    </ul>
+    <p>We do not collect your name, email address, or any account information. Comediq is currently a single-user app with no authentication system.</p>
+
+    <h2>Third-Party Services That Process Your Data</h2>
+    <p>Processing your sets requires sending data to these third-party services:</p>
+
+    <div class="card">
+      <p><strong>AssemblyAI</strong> (assemblyai.com) — Your audio is uploaded to AssemblyAI for speech-to-text transcription. AssemblyAI processes audio on servers in the United States. Their privacy policy is at assemblyai.com/privacy.</p>
+    </div>
+    <div class="card">
+      <p><strong>Anthropic / Claude API</strong> (anthropic.com) — Your transcript is sent to Anthropic's Claude API for analysis. Claude identifies bits, scores your set, and detects themes. Anthropic processes data on servers in the United States. Their privacy policy is at anthropic.com/privacy.</p>
+    </div>
+    <div class="card">
+      <p><strong>Supabase</strong> (supabase.com) — All structured data (sets, bits, identities, notes, plans) and audio files are stored in Supabase. Supabase is a cloud database platform. Their privacy policy is at supabase.com/privacy.</p>
+    </div>
+
+    <h2>How We Use Your Data</h2>
+    <ul>
+      <li>To transcribe and analyze your comedy sets</li>
+      <li>To track your joke performance over time</li>
+      <li>To surface which material is working and which isn't</li>
+      <li>To let you build and manage your active set list</li>
+    </ul>
+    <p>We do not use your data for advertising. We do not sell your data. We do not train AI models on your content.</p>
+
+    <h2>Data Retention</h2>
+    <p>Your data is retained indefinitely until you delete it. You can delete individual sets from within the app. There is no account deletion flow currently — if you want all your data removed, contact us at <a href="mailto:adam@comediq.us">adam@comediq.us</a> and we will delete it manually within 7 days.</p>
+
+    <h2>Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li>Access all data stored about you</li>
+      <li>Request deletion of your data</li>
+      <li>Export your data (contact us)</li>
+    </ul>
+    <p>To exercise any of these rights, email <a href="mailto:adam@comediq.us">adam@comediq.us</a>.</p>
+
+    <h2>Security</h2>
+    <p>Data is stored in Supabase using service-role credentials. Audio files are stored in private Supabase Storage buckets. The API is served over HTTPS via Railway. We do not implement end-to-end encryption at the application layer — treat this as a personal productivity tool, not a secure vault for sensitive material.</p>
+
+    <h2>Children</h2>
+    <p>Comediq is intended for adults (18+). We do not knowingly collect data from anyone under 18.</p>
+
+    <h2>Changes to This Policy</h2>
+    <p>If we materially change how we handle your data, we will update this page and change the effective date. For significant changes, we may notify you in the app.</p>
+
+    <hr class="divider" />
+
+    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.5px;">Questions? <a href="mailto:adam@comediq.us">adam@comediq.us</a> &nbsp;·&nbsp; <a href="/terms.html">Terms of Service</a> &nbsp;·&nbsp; <a href="/faq.html">FAQ</a></p>
+  </div>
+</body>
+</html>

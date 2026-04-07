@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — Comediq</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0A0A0A;
+      --surface: #111111;
+      --text: #F5F2EB;
+      --muted: #888880;
+      --dim: #555550;
+      --blue: #1D4DB5;
+      --border: rgba(29, 77, 181, 0.2);
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 0 0 80px;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header a { text-decoration: none; }
+    .logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--blue);
+    }
+    .back {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .back:hover { color: var(--text); }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 32px 0;
+    }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      letter-spacing: 3px;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .effective {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+    h2 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1.4px;
+      color: var(--muted);
+      margin: 40px 0 12px;
+      text-transform: uppercase;
+    }
+    p { color: var(--text); margin-bottom: 16px; opacity: 0.85; }
+    ul { padding-left: 20px; margin-bottom: 16px; }
+    ul li { color: var(--text); opacity: 0.85; margin-bottom: 8px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .card p { margin-bottom: 0; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://comediq.us" class="logo">COMEDIQ</a>
+    <a href="https://comediq.us" class="back">← BACK TO HOME</a>
+  </header>
+
+  <div class="container">
+    <h1>TERMS OF SERVICE</h1>
+    <p class="effective">EFFECTIVE DATE: APRIL 7, 2026</p>
+
+    <div class="card">
+      <p>By using the Comediq app, you agree to these terms. If you don't agree, don't use the app. These are straightforward — we're a small tool for comedians, not a corporation with a legal department.</p>
+    </div>
+
+    <h2>What Comediq Is</h2>
+    <p>Comediq ("the Service") is a mobile application that records comedy sets, transcribes audio, analyzes performance using AI, and helps comedians track their material over time. The Service is operated by Adam Malev.</p>
+
+    <h2>Your Content Is Yours</h2>
+    <p>Everything you put into Comediq — your jokes, your recordings, your set notes — belongs to you. Full stop.</p>
+    <ul>
+      <li>We claim no ownership over your creative work</li>
+      <li>We do not license your material to anyone</li>
+      <li>We do not use your jokes to train AI models</li>
+      <li>We do not publish or share your content</li>
+    </ul>
+    <p>You grant us only the limited technical rights necessary to operate the service: storing your files, processing your audio through third-party APIs (AssemblyAI, Anthropic), and displaying your data back to you in the app.</p>
+
+    <h2>Acceptable Use</h2>
+    <p>You agree not to use Comediq to:</p>
+    <ul>
+      <li>Record other people without their knowledge or consent</li>
+      <li>Upload audio that contains illegal content</li>
+      <li>Attempt to access, modify, or disrupt the backend API in unauthorized ways</li>
+      <li>Reverse engineer the service for commercial purposes</li>
+    </ul>
+    <p>Comediq is a personal performance tool. It's designed for one comedian recording their own sets at open mics and shows.</p>
+
+    <h2>Third-Party Processing</h2>
+    <p>Processing your sets requires sending data to third-party services:</p>
+    <ul>
+      <li><strong>AssemblyAI</strong> — transcribes your audio</li>
+      <li><strong>Anthropic (Claude)</strong> — analyzes your transcript</li>
+      <li><strong>Supabase</strong> — stores your data</li>
+    </ul>
+    <p>By using the Service, you agree to the processing of your data by these providers as described in our <a href="/privacy.html">Privacy Policy</a>. Each provider has their own terms of service that apply to their handling of your data.</p>
+
+    <h2>Service Availability</h2>
+    <p>Comediq is provided "as is" and "as available." We make no guarantees about uptime, accuracy of transcription or analysis, or continued availability of the service. We are a small operation and things break sometimes.</p>
+    <p>We are not responsible for:</p>
+    <ul>
+      <li>Loss of recorded sets due to connectivity issues or service outages</li>
+      <li>Inaccurate transcriptions or analysis scores</li>
+      <li>Data loss resulting from third-party service failures</li>
+    </ul>
+    <p>That said — we built this for our own use and we care about it working. If something breaks, email us.</p>
+
+    <h2>Costs</h2>
+    <p>Comediq is currently free to use. Processing a set costs approximately $0.05 in third-party API fees (AssemblyAI + Anthropic). If that changes and we introduce pricing, we will give reasonable notice before charging anyone.</p>
+
+    <h2>Termination</h2>
+    <p>You can stop using the app at any time. If you want your data deleted, contact us at <a href="mailto:adam@comediq.us">adam@comediq.us</a>.</p>
+    <p>We reserve the right to suspend access to the service if we believe a user is misusing it, though in practice this is a personal tool and that scenario is unlikely.</p>
+
+    <h2>Limitation of Liability</h2>
+    <p>To the maximum extent permitted by law, Comediq and Adam Malev are not liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the service — including but not limited to loss of data, loss of recordings, or inaccurate performance analysis.</p>
+    <p>Our total liability to you for any claim arising from use of the service is limited to the amount you paid us in the past 12 months (which is currently $0).</p>
+
+    <h2>Governing Law</h2>
+    <p>These terms are governed by the laws of the State of New York, without regard to conflict of law provisions. Any disputes will be resolved in the courts of New York County, New York.</p>
+
+    <h2>Changes to These Terms</h2>
+    <p>We may update these terms from time to time. If we make material changes, we will update the effective date and may notify you in the app. Continued use of the service after changes constitutes acceptance of the new terms.</p>
+
+    <hr class="divider" />
+
+    <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.5px;">Questions? <a href="mailto:adam@comediq.us">adam@comediq.us</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="/faq.html">FAQ</a></p>
+  </div>
+</body>
+</html>
